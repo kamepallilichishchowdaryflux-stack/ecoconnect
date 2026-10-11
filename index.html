@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoConnect | Green Steps, Great Change</title>
+<style>
+:root{--green:#176b45;--light:#edf7ef;--ink:#19352a;--muted:#718078;--line:#e5ece6}
+*{box-sizing:border-box}
+body{margin:0;background:#f7faf7;color:var(--ink);font:15px Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+aside{width:235px;background:#fff;border-right:1px solid var(--line);padding:25px 17px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;margin:0 8px 36px}
+.logo{background:#dff3e3;border-radius:13px;padding:11px;font-size:23px}
+.eyebrow{font-size:11px;color:#89958d;font-weight:bold;letter-spacing:1.5px;margin:22px 10px 10px}
+.nav{display:flex;gap:11px;align-items:center;width:100%;border:0;background:transparent;padding:12px;border-radius:10px;text-align:left;color:#64736a;margin:3px 0}
+.nav.active,.nav:hover{background:var(--light);color:var(--green);font-weight:bold}
+.side-note{margin-top:45px;padding:15px;background:var(--light);border-radius:13px;font-size:13px;line-height:1.6}
+main{flex:1;min-width:0;padding:28px clamp(16px,4vw,48px);max-width:1500px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
+h1{font-size:27px;margin:0 0 8px}
+.sub{color:var(--muted);margin:0;line-height:1.5}
+.avatar{width:42px;height:42px;border-radius:50%;background:#dff3e3;color:var(--green);display:grid;place-items:center;font-weight:bold}
+.hero{background:linear-gradient(115deg,#164f38,#258257);color:white;padding:30px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;gap:18px;overflow:hidden}
+.hero h2{font-size:clamp(23px,3vw,34px);margin:8px 0 12px}
+.hero p{line-height:1.7;color:#e0f1e5;max-width:520px}
+.hero-icon{font-size:76px;opacity:.9}
+.pill{display:inline-block;padding:6px 10px;border-radius:30px;background:#ffffff25;font-size:12px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:28px 0 15px}
+h2{font-size:19px;margin:0}
+.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--green);color:white;font-weight:bold}
+.btn.secondary{background:white;color:var(--green);border:1px solid #cfe0d2}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.stat,.card{background:white;border:1px solid var(--line);border-radius:15px;padding:19px}
+.stat-icon{font-size:23px}
+.stat strong{display:block;font-size:26px;margin:12px 0 5px}
+.muted{color:var(--muted);font-size:13px}
+.columns{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:17px}
+.card{margin-bottom:15px}
+.announcement{padding:15px 0;border-bottom:1px solid var(--line)}
+.announcement:last-child{border-bottom:0;padding-bottom:0}
+.tag{display:inline-block;background:#e5f5e8;color:#267047;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold}
+.announcement h3,.item h3{font-size:15px;margin:10px 0}
+.announcement p,.item p{color:#64736a;line-height:1.6;margin:6px 0}
+.item{padding:15px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.progress{height:7px;background:#eaf0ea;border-radius:9px;margin-top:12px;overflow:hidden}
+.progress span{display:block;height:100%;background:#48a76d;border-radius:9px}
+.page{display:none}
+.page.active{display:block}
+.form{display:grid;gap:12px;margin-top:18px}
+input,textarea{width:100%;padding:12px;border:1px solid #dce6de;border-radius:9px;background:white}
+textarea{min-height:100px;resize:vertical}
+.notice{background:#fff5dc;color:#70551c;padding:12px 15px;border-radius:10px;line-height:1.6;font-size:13px;margin-bottom:18px}
+footer{margin-top:28px;color:#87948b;font-size:12px;text-align:center}
+#toast{position:fixed;bottom:20px;right:20px;background:#173f2c;color:white;padding:14px 18px;border-radius:12px;display:none;max-width:90vw}
+@media(max-width:760px){
+ .layout{display:block}aside{width:100%;padding:14px;border-right:0;border-bottom:1px solid var(--line)}
+ .brand{margin:0 5px 12px}.eyebrow,.side-note{display:none}
+ .navs{display:flex;overflow-x:auto;gap:4px}.nav{white-space:nowrap;width:auto;margin:0;padding:10px}
+ main{padding:22px 15px}.columns{grid-template-columns:1fr}
+ .hero-icon{display:none}.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:22px}
+}
+@media(max-width:390px){.stats{grid-template-columns:1fr}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><span class="logo">🌿</span> EcoConnect</div>
+  <div class="eyebrow">YOUR ECO CLUB</div>
+  <div class="navs">
+    <button class="nav active" data-page="overview">🏡 Overview</button>
+    <button class="nav" data-page="projects">🌱 Projects</button>
+    <button class="nav" data-page="ideas">💡 Ideas</button>
+    <button class="nav" data-page="polls">🗳️ Polls</button>
+    <button class="nav" data-page="meetings">📅 Meetings</button>
+    <button class="nav" data-page="members">👥 Members</button>
+  </div>
+  <div class="side-note">🌍 <b>Small steps matter.</b><br>Great things grow from small green steps.</div>
+</aside>
+<main>
+  <div class="top">
+    <div><h1 id="pageTitle">Welcome to EcoConnect!</h1><p class="sub" id="pageSub">Together, let's make our school greener.</p></div>
+    <div class="avatar" title="Demo profile">EC</div>
+  </div>
+
+  <section id="overview" class="page active">
+    <div class="hero">
+      <div><span class="pill">🌎 OUR MISSION</span><h2>Great things grow from small green steps.</h2><p>Share ideas, join eco-projects and turn everyday actions into a greener future for our school.</p><button class="btn secondary" onclick="go('projects')">Explore projects →</button></div>
+      <div class="hero-icon">🌳</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="stat-icon">🌿</span><strong>03</strong><span class="muted">Sample projects</span></div>
+      <div class="stat"><span class="stat-icon">💡</span><strong>12</strong><span class="muted">Ideas shared</span></div>
+      <div class="stat"><span class="stat-icon">🤝</span><strong>24</strong><span class="muted">Club members</span></div>
+    </div>
+    <div class="section-head"><h2>Club overview</h2><span class="tag">DEMO CONTENT</span></div>
+    <div class="columns">
+      <div class="card"><h2>📢 Announcements</h2>
+        <div class="announcement"><span class="tag">CLUB NEWS</span><h3>Welcome to EcoConnect!</h3><p>Let's work together on practical ideas that make our school cleaner and greener.</p><span class="muted">Eco Club team · Sample announcement</span></div>
+        <div class="announcement"><span class="tag">GET INVOLVED</span><h3>Share your next big idea</h3><p>Have an idea for an eco-friendly activity? Visit the Ideas section and share it with the club.</p></div>
+      </div>
+      <div class="card"><h2>🌱 Project spotlight</h2>
+        <div class="item"><h3>Greener Classrooms</h3><p>Encourage students to care for classroom plants.</p><div class="progress"><span style="width:65%"></span></div><p class="muted">Sample progress: 65%</p></div>
+        <div class="item"><h3>Waste Awareness</h3><p>Help everyone understand how to reduce waste.</p></div>
+        <button class="btn" onclick="go('ideas')">Share an idea →</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="page">
+    <div class="notice">These are sample projects for the initial interface preview.</div>
+    <div class="section-head"><h2>Our projects</h2><button class="btn" onclick="toast('Project submission will be connected to the database in a later step.')">＋ New project</button></div>
+    <div class="card"><span class="tag">IN PROGRESS</span><h2 style="margin-top:12px">🌿 Greener Classrooms</h2><p class="sub">Encourage students to care for plants and keep classrooms welcoming.</p><div class="progress"><span style="width:65%"></span></div></div>
+    <div class="card"><span class="tag">PLANNING</span><h2 style="margin-top:12px">♻️ Waste Awareness</h2><p class="sub">Create activities that encourage thoughtful waste reduction.</p></div>
+    <div class="card"><span class="tag">PLANNING</span><h2 style="margin-top:12px">🌳 Campus Greenery</h2><p class="sub">Explore ways to care for existing green spaces around school.</p></div>
+  </section>
+
+  <section id="ideas" class="page">
+    <div class="notice">This preview does not save ideas to a shared database yet.</div>
+    <div class="card"><h2>💡 Share an eco-idea</h2><p class="sub">Every great change starts with an idea.</p>
+      <form class="form" id="ideaForm"><input id="ideaTitle" required maxlength="100" placeholder="Your idea title"><textarea id="ideaText" required maxlength="1000" placeholder="Explain your idea..."></textarea><button class="btn">Submit idea preview</button></form>
+    </div>
+    <div class="card"><h2>Community ideas</h2><div id="ideaList"><p class="sub">Your preview submissions will appear here during this session.</p></div></div>
+  </section>
+
+  <section id="polls" class="page">
+    <div class="card"><span class="tag">SAMPLE POLL</span><h2 style="margin-top:12px">Which eco-activity should we plan next?</h2>
+      <form class="form" id="pollForm">
+        <label><input type="radio" name="poll" value="Waste awareness campaign" required style="width:auto"> Waste awareness campaign</label>
+        <label><input type="radio" name="poll" value="Greener classrooms" style="width:auto"> Greener classrooms</label>
+        <label><input type="radio" name="poll" value="Campus greenery" style="width:auto"> Campus greenery</label>
+        <button class="btn">Vote in preview</button>
+      </form><p class="muted" id="pollResult">Preview only: votes are not shared or saved.</p>
+    </div>
+  </section>
+
+  <section id="meetings" class="page">
+    <div class="card"><h2>📅 Club meetings</h2><p class="sub">Meeting details will appear here once published by club staff.</p><div class="item"><h3>EcoConnect planning session</h3><p>Sample meeting · Date and venue to be announced</p><span class="tag">SAMPLE</span></div></div>
+  </section>
+
+  <section id="members" class="page">
+    <div class="notice"><b>Important:</b> This is a visual preview, not a secure account system. No real member records or role controls are connected yet.</div>
+    <div class="card"><h2>👥 Club community</h2><p class="sub">EcoConnect has three planned roles:</p><div class="item"><h3>🛡️ Admin</h3><p>Manage club membership, permissions and published content.</p></div><div class="item"><h3>🌿 Host</h3><p>Coordinate club activities and manage permitted content.</p></div><div class="item"><h3>🍃 Member</h3><p>View club updates, submit ideas and participate in polls.</p></div></div>
+  </section>
+  <footer>EcoConnect · Great things grow from small green steps. 🌱</footer>
+</main>
+</div>
+<div id="toast" role="status"></div>
+<script>
+const titles={
+ overview:["Welcome to EcoConnect!","Together, let's make our school greener."],
+ projects:["Our Projects","Small actions, meaningful progress."],
+ ideas:["Ideas Garden","Your ideas can help our school grow."],
+ polls:["Club Polls","Share your voice in club decisions."],
+ meetings:["Meetings","Stay connected with club activities."],
+ members:["Our Community","Every member can make a difference."]
+};
+function go(page){
+ document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===page));
+ document.querySelectorAll('.nav').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+ document.getElementById('pageTitle').textContent=titles[page][0];
+ document.getElementById('pageSub').textContent=titles[page][1];
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.page)));
+let toastTimer;
+function toast(message){
+ const el=document.getElementById('toast');
+ el.textContent=message;el.style.display='block';
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',3500);
+}
+document.getElementById('ideaForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const title=document.getElementById('ideaTitle').value.trim();
+ const body=document.getElementById('ideaText').value.trim();
+ if(!title||!body)return;
+ const item=document.createElement('div');item.className='item';
+ const h=document.createElement('h3');h.textContent=title;
+ const p=document.createElement('p');p.textContent=body;
+ item.append(h,p);document.getElementById('ideaList').prepend(item);
+ e.target.reset();toast('Idea added to this preview session!');
+});
+document.getElementById('pollForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const choice=new FormData(e.target).get('poll');
+ if(!choice)return;
+ document.getElementById('pollResult').textContent='Your preview choice: '+choice+'. This vote is not saved or shared.';
+ toast('Preview vote recorded for this session.');
+});
+</script>
+</body>
+</html>
