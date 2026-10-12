@@ -174,23 +174,58 @@ function toast(message){
  el.textContent=message;el.style.display='block';
  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',3500);
 }
-document.getElementById('ideaForm').addEventListener('submit',e=>{
- e.preventDefault();
+
+document.getElementById('ideaForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
   const title = document.getElementById('ideaTitle').value.trim();
   const body = document.getElementById('ideaText').value.trim();
+
   if (!title || !body) return;
+
+  if (!window.ecoSupabase) {
+    toast('Database is loading. Try again.');
+    return;
+  }
+
+  const { data: { user }, error: authError } =
+    await window.ecoSupabase.auth.getUser();
+
+  if (authError || !user) {
+    toast('Please sign in before submitting ideas.');
+    return;
+  }
+
+  const { error } = await window.ecoSupabase
+    .from('ideas')
+    .insert({
+      idea: body,
+      title: title,
+      submitted_by: user.id,
+      status: 'pending'
+    });
+
+  if (error) {
+    console.error(error);
+    toast('Submission failed: ' + error.message);
+    return;
+  }
 
   const item = document.createElement('div');
   item.className = 'item';
+
   const h = document.createElement('h3');
   h.textContent = title;
+
   const p = document.createElement('p');
   p.textContent = body;
+
   item.append(h, p);
   document.getElementById('ideaList').prepend(item);
   e.target.reset();
-  toast('Idea added to this preview session only.');
+  toast('Idea saved successfully! 🌱');
 });
+
 
  const title=document.getElementById('ideaTitle').value.trim();
  const body=document.getElementById('ideaText').value.trim();
