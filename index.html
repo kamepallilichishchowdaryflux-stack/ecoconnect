@@ -176,6 +176,22 @@ function toast(message){
 }
 document.getElementById('ideaForm').addEventListener('submit',e=>{
  e.preventDefault();
+  const title = document.getElementById('ideaTitle').value.trim();
+  const body = document.getElementById('ideaText').value.trim();
+  if (!title || !body) return;
+
+  const item = document.createElement('div');
+  item.className = 'item';
+  const h = document.createElement('h3');
+  h.textContent = title;
+  const p = document.createElement('p');
+  p.textContent = body;
+  item.append(h, p);
+  document.getElementById('ideaList').prepend(item);
+  e.target.reset();
+  toast('Idea added to this preview session only.');
+});
+
  const title=document.getElementById('ideaTitle').value.trim();
  const body=document.getElementById('ideaText').value.trim();
  if(!title||!body)return;
