@@ -192,6 +192,24 @@ document.getElementById('pollForm').addEventListener('submit',e=>{
  document.getElementById('pollResult').textContent='Your preview choice: '+choice+'. This vote is not saved or shared.';
  toast('Preview vote recorded for this session.');
 });
+
+const SUPABASE_URL = 'https://qrfinqxzgchvwpxqfwgk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_1i_i99RwHuJClojl03cOjw_08s21kFx';
+
+ 
+const supabaseScript = document.createElement('script');
+supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+supabaseScript.onload = () => {
+  window.ecoSupabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+  console.log('EcoConnect database client ready!');
+};
+document.head.appendChild(supabaseScript);
+
+
+
 </script>
 </body>
 </html>
