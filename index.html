@@ -7,36 +7,22 @@
 <title>EcoConnect | Green Steps, Great Change</title>
 <style>
  
-/* EcoConnect login layout fix */
+/* Login card stays in the main content flow and never overlaps the dashboard. */
 #authCard {
   width: 100%;
-  max-width: 420px;
-  box-sizing: border-box;
-  margin: 0 auto 24px;
+  max-width: 520px;
+  margin: 0 0 24px;
   position: relative;
-  z-index: 5;
 }
-
-#authCard input {
-  width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
+#authCard input { width: 100%; min-width: 0; }
+#authCard .auth-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
-
-#authCard button {
-  width: 100%;
-  white-space: normal;
-}
-
-main {
-  min-width: 0;
-}
-
-main > .top {
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 24px;
-}
+#authCard .auth-actions .btn { width: 100%; }
+#authMessage { margin-top: 12px; overflow-wrap: anywhere; }
+[hidden] { display: none !important; }
 
 :root{--green:#176b45;--light:#edf7ef;--ink:#19352a;--muted:#718078;--line:#e5ece6}
 *{box-sizing:border-box}
@@ -116,43 +102,27 @@ footer{margin-top:28px;color:#87948b;font-size:12px;text-align:center}
 </aside>
 
 <main>
-  <!-- LOGIN CARD -->
-  <div class="card" id="authCard">
-    <h2>🌱 EcoConnect Login</h2>
-
-    <form id="authForm" class="form">
-      <input id="authEmail" type="email"
-             placeholder="Your email" required>
-
-      <input id="authPassword" type="password"
-             placeholder="Password (6+ characters)"
-             minlength="6" required>
-
-      <button class="btn" type="submit">Sign in</button>
-      <button class="btn" type="button" id="signUpBtn">
-        Create account
-      </button>
-    </form>
-
-    <p class="sub" id="authMessage">
-      Sign in to submit your ideas.
-    </p>
-  </div>
-
-  <!-- EXISTING HEADER -->
   <div class="top">
     <div>
       <h1 id="pageTitle">Welcome to EcoConnect!</h1>
-      <p class="sub" id="pageSub">
-        Together, let's make our school greener.
-      </p>
+      <p class="sub" id="pageSub">Together, let's make our school greener.</p>
     </div>
-    <div class="avatar" title="Demo profile">EC</div>
+    <div class="avatar" title="EcoConnect">EC</div>
   </div>
 
-  <!-- KEEP ALL YOUR EXISTING SECTIONS HERE -->
-</main>
-
+  <div class="card" id="authCard">
+    <h2>🌱 EcoConnect Login</h2>
+    <form id="authForm" class="form">
+      <input id="authEmail" type="email" autocomplete="email" placeholder="Your email" required>
+      <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (6+ characters)" minlength="6" required>
+      <div class="auth-actions">
+        <button class="btn" type="submit">Sign in</button>
+        <button class="btn secondary" type="button" id="signUpBtn">Create account</button>
+      </div>
+    </form>
+    <p class="sub" id="authMessage" role="status" aria-live="polite">Sign in to submit ideas. New accounts may need email confirmation.</p>
+    <button class="btn secondary" type="button" id="signOutBtn" hidden>Sign out</button>
+  </div>
 
   <section id="overview" class="page active">
     <div class="hero">
@@ -187,11 +157,11 @@ footer{margin-top:28px;color:#87948b;font-size:12px;text-align:center}
   </section>
 
   <section id="ideas" class="page">
-    <div class="notice">This preview does not save ideas to a shared database yet.</div>
+    <div class="notice">Sign in to submit an idea. Submissions are saved to the club database when your account is authorized.</div>
     <div class="card"><h2>💡 Share an eco-idea</h2><p class="sub">Every great change starts with an idea.</p>
-      <form class="form" id="ideaForm"><input id="ideaTitle" required maxlength="100" placeholder="Your idea title"><textarea id="ideaText" required maxlength="1000" placeholder="Explain your idea..."></textarea><button class="btn">Submit idea preview</button></form>
+      <form class="form" id="ideaForm"><input id="ideaTitle" required maxlength="100" placeholder="Your idea title"><textarea id="ideaText" required maxlength="1000" placeholder="Explain your idea..."></textarea><button class="btn">Submit idea</button></form>
     </div>
-    <div class="card"><h2>Community ideas</h2><div id="ideaList"><p class="sub">Your preview submissions will appear here during this session.</p></div></div>
+    <div class="card"><h2>Community ideas</h2><div id="ideaList"><p class="sub">New submissions will appear here after you submit them.</p></div></div>
   </section>
 
   <section id="polls" class="page">
@@ -293,15 +263,7 @@ document.getElementById('ideaForm').addEventListener('submit', async e => {
 });
 
 
- const title=document.getElementById('ideaTitle').value.trim();
- const body=document.getElementById('ideaText').value.trim();
- if(!title||!body)return;
- const item=document.createElement('div');item.className='item';
- const h=document.createElement('h3');h.textContent=title;
- const p=document.createElement('p');p.textContent=body;
- item.append(h,p);document.getElementById('ideaList').prepend(item);
- e.target.reset();toast('Idea added to this preview session!');
-});
+
 document.getElementById('pollForm').addEventListener('submit',e=>{
  e.preventDefault();
  const choice=new FormData(e.target).get('poll');
@@ -313,68 +275,94 @@ document.getElementById('pollForm').addEventListener('submit',e=>{
 const SUPABASE_URL = 'https://qrfinqxzgchvwpxqfwgk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1i_i99RwHuJClojl03cOjw_08s21kFx';
 
- 
+const authForm = document.getElementById('authForm');
+const signUpBtn = document.getElementById('signUpBtn');
+const signOutBtn = document.getElementById('signOutBtn');
+const authMessage = document.getElementById('authMessage');
+
+function showAuthMessage(message, isError = false) {
+  authMessage.textContent = message;
+  authMessage.style.color = isError ? '#a52828' : '';
+}
+
+function setSignedInUI(user) {
+  if (user) {
+    showAuthMessage(`Signed in as ${user.email || 'EcoConnect member'}.`);
+    signOutBtn.hidden = false;
+    document.getElementById('authPassword').value = '';
+  } else {
+    showAuthMessage('Sign in to submit ideas. New accounts may need email confirmation.');
+    signOutBtn.hidden = true;
+  }
+}
+
 const supabaseScript = document.createElement('script');
 supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-supabaseScript.onload = () => {
-  window.ecoSupabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-  console.log('EcoConnect database client ready!');
+supabaseScript.onload = async () => {
+  try {
+    window.ecoSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const db = window.ecoSupabase;
+    console.log('EcoConnect database client ready!');
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      if (error) {
+        showAuthMessage(error.message, true);
+        return;
+      }
+      setSignedInUI(data.user);
+    });
+
+    signUpBtn.addEventListener('click', async () => {
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      if (!email || password.length < 6) {
+        showAuthMessage('Enter your email and a password of at least 6 characters.', true);
+        return;
+      }
+      const { data, error } = await db.auth.signUp({ email, password });
+      if (error) {
+        showAuthMessage(error.message, true);
+      } else if (data.session) {
+        setSignedInUI(data.user);
+      } else {
+        showAuthMessage('Account created. Check your email to confirm before signing in.');
+      }
+    });
+
+    signOutBtn.addEventListener('click', async () => {
+      const { error } = await db.auth.signOut();
+      if (error) {
+        showAuthMessage(error.message, true);
+        return;
+      }
+      setSignedInUI(null);
+    });
+
+    const { data: { user }, error: userError } = await db.auth.getUser();
+    if (!userError && user) setSignedInUI(user);
+
+    const { data: announcements, error: announcementError } = await db
+      .from('announcements')
+      .select('id, title')
+      .limit(5);
+    if (announcementError) {
+      console.error('EcoConnect announcement check failed:', announcementError.message);
+    } else {
+      console.log('EcoConnect database test succeeded!', announcements);
+    }
+  } catch (error) {
+    console.error('EcoConnect initialization failed:', error);
+    showAuthMessage('Could not connect to the database. Refresh and try again.', true);
+  }
+};
+supabaseScript.onerror = () => {
+  showAuthMessage('Could not load the authentication library. Check your connection and refresh.', true);
 };
 document.head.appendChild(supabaseScript);
-
-supabaseScript.addEventListener('load', () => {
-  const db = window.ecoSupabase;
-  const message = document.getElementById('authMessage');
-
-  document.getElementById('authForm').addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-
-    const { error } = await db.auth.signInWithPassword({ email, password });
-
-    message.textContent = error
-      ? error.message
-      : 'Signed in successfully! 🌱';
-  });
-
-  document.getElementById('signUpBtn').addEventListener('click', async () => {
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-
-    if (!email || password.length < 6) {
-      message.textContent = 'Enter your email and a password of at least 6 characters.';
-      return;
-    }
-
-    const { error } = await db.auth.signUp({ email, password });
-
-    message.textContent = error
-      ? error.message
-      : 'Check your email to confirm your account.';
-  });
-});
- 
-
-
-supabaseScript.addEventListener('load', async () => {
-  const { data, error } = await window.ecoSupabase
-    .from('announcements')
-    .select('id, title')
-    .limit(5);
-
-  if (error) {
-    console.error('EcoConnect database test failed:', error.message);
-  } else {
-    console.log('EcoConnect database test succeeded!', data);
-  }
-});
-
-
 
 </script>
 </body>
