@@ -84,9 +84,18 @@ footer{margin-top:28px;color:#87948b;font-size:12px;text-align:center}
 </aside>
 <main>
   <div class="top">
-    <div><h1 id="pageTitle">Welcome to EcoConnect!</h1><p class="sub" id="pageSub">Together, let's make our school greener.</p></div>
-    <div class="avatar" title="Demo profile">EC</div>
+    
+  <div class="card" id="authCard">
+    <h2>🌱 EcoConnect Login</h2>
+    <form id="authForm" class="form">
+      <input id="authEmail" type="email" placeholder="Your email" required>
+      <input id="authPassword" type="password" placeholder="Password (6+ characters)" minlength="6" required>
+      <button class="btn" type="submit">Sign in</button>
+      <button class="btn" type="button" id="signUpBtn">Create account</button>
+    </form>
+    <p class="sub" id="authMessage">Sign in to submit your ideas.</p>
   </div>
+
 
   <section id="overview" class="page active">
     <div class="hero">
@@ -258,6 +267,40 @@ supabaseScript.onload = () => {
   console.log('EcoConnect database client ready!');
 };
 document.head.appendChild(supabaseScript);
+
+supabaseScript.addEventListener('load', () => {
+  const db = window.ecoSupabase;
+  const message = document.getElementById('authMessage');
+
+  document.getElementById('authForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+
+    const { error } = await db.auth.signInWithPassword({ email, password });
+
+    message.textContent = error
+      ? error.message
+      : 'Signed in successfully! 🌱';
+  });
+
+  document.getElementById('signUpBtn').addEventListener('click', async () => {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+
+    if (!email || password.length < 6) {
+      message.textContent = 'Enter your email and a password of at least 6 characters.';
+      return;
+    }
+
+    const { error } = await db.auth.signUp({ email, password });
+
+    message.textContent = error
+      ? error.message
+      : 'Check your email to confirm your account.';
+  });
+});
  
 
 
@@ -273,7 +316,7 @@ supabaseScript.addEventListener('load', async () => {
     console.log('EcoConnect database test succeeded!', data);
   }
 });
- const SUPABASE_URL
+
 
 
 </script>
